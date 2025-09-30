@@ -1,6 +1,5 @@
 module Importation
   class RestaurantData
-
     def initialize(params)
       @params = params
     end

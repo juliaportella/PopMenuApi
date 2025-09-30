@@ -14,13 +14,13 @@ module Validators
 
       @restaurants.each do |restaurant|
         errors = validate_restaurant(restaurant)
+
         if errors.any?
           invalid_restaurants << restaurant.merge(errors: errors)
         else
-          # Se o restaurante é válido, validamos os menus
           menus_validation = validate_menus(restaurant[:menus])
+
           if menus_validation[:invalid_menus].any?
-            # Se algum menu é inválido, o restaurante todo é inválido para a importação
             invalid_restaurants << restaurant.merge(menus: menus_validation[:invalid_menus])
           else
             valid_restaurants << restaurant.merge(menus: menus_validation[:valid_menus])
@@ -48,14 +48,14 @@ module Validators
 
       menus.each do |menu|
         errors = validate_menu(menu)
+
         if errors.any?
           invalid_menus << menu.merge(errors: errors)
         else
-          # Se o menu é válido, validamos os itens
           items_key = menu.key?(:menu_items) ? :menu_items : :dishes
           items_validation = validate_items(menu[items_key] || [])
+
           if items_validation[:invalid_items].any?
-            # Se algum item é inválido, o menu todo é inválido
             invalid_menus << menu.merge(items_key => items_validation[:invalid_items])
           else
             valid_menus << menu.merge(items_key => items_validation[:valid_items])
@@ -80,6 +80,7 @@ module Validators
 
       items.each do |item|
         errors = validate_item(item)
+
         if errors.any?
           invalid_items << item.merge(errors: errors)
         else

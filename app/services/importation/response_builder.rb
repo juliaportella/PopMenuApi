@@ -42,16 +42,16 @@ module Importation
         {
           name: restaurant[:name],
           error: "Invalid parameters",
-          errors: restaurant[:errors], # Adicionado para mostrar os erros do restaurante
+          errors: restaurant[:errors],
           menus: (restaurant[:menus] || []).map do |menu|
             {
               name: menu[:name] || "unknown",
-              errors: menu[:errors], # Adicionado para mostrar os erros do menu
+              errors: menu[:errors],
               items: ((menu[:menu_items] || menu[:dishes]) || []).map do |item|
                 {
                   name: item[:name] || "unknown",
                   price: item[:price],
-                  errors: item[:errors] # Adicionado para mostrar os erros específicos de cada item
+                  errors: item[:errors]
                 }
               end
             }
