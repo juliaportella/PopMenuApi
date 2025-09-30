@@ -44,7 +44,7 @@ RSpec.describe Importation::RestaurantsDataCreator, type: :service do
             {
               name: "Error Cafe",
               menus: [
-                { name: "lunch", menu_items: [{ name: "Burger", price: 9.0 }] }
+                { name: "lunch", menu_items: [ { name: "Burger", price: 9.0 } ] }
               ]
             }
           ]

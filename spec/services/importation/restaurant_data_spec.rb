@@ -16,7 +16,7 @@ RSpec.describe Importation::RestaurantData, type: :service do
         {
           name: "Poppo's Cafe",
           menus: [
-            { name: "lunch", menu_items: [{ name: "Burger", price: 9.0 }] }
+            { name: "lunch", menu_items: [ { name: "Burger", price: 9.0 } ] }
           ]
         }
       ]
@@ -26,13 +26,13 @@ RSpec.describe Importation::RestaurantData, type: :service do
   let(:invalid_params) do
     {
       restaurants: [
-        { name: "Casa del Poppo", menus: [{ name: "", menu_items: [] }] }
+        { name: "Casa del Poppo", menus: [ { name: "", menu_items: [] } ] }
       ]
     }
   end
 
   let(:validated_params) { { valid_params: valid_params, invalid_params: invalid_params } }
-  let(:created_data) { { restaurants: [{ name: "Poppo's Cafe", id: 1 }] } }
+  let(:created_data) { { restaurants: [ { name: "Poppo's Cafe", id: 1 } ] } }
   let(:final_response) { { success: created_data[:restaurants], failed: invalid_params[:restaurants] } }
 
   let(:validator_instance) { instance_double(Validators::ImportationRequestParams, perform: validated_params) }

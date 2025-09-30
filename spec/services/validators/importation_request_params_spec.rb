@@ -9,7 +9,7 @@ RSpec.describe Validators::ImportationRequestParams, type: :service do
             {
               name: "Poppo's Cafe",
               menus: [
-                { name: "lunch", menu_items: [{ name: "Burger", price: 9.0 }] }
+                { name: "lunch", menu_items: [ { name: "Burger", price: 9.0 } ] }
               ]
             }
           ]
@@ -48,8 +48,8 @@ RSpec.describe Validators::ImportationRequestParams, type: :service do
       let(:params) do
         {
           restaurants: [
-            { name: "Poppo's Cafe", menus: [{ name: "lunch", menu_items: [{ name: "Burger", price: 9.0 }] }] },
-            { name: "", menus: [{ name: "", menu_items: [] }] }
+            { name: "Poppo's Cafe", menus: [ { name: "lunch", menu_items: [ { name: "Burger", price: 9.0 } ] } ] },
+            { name: "", menus: [ { name: "", menu_items: [] } ] }
           ]
         }
       end

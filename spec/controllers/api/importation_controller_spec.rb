@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe Api::ImportationController, type: :controller do
   describe "POST #import" do
-
     context "when no data is sent" do
       it "returns bad_request status with error message" do
         post :import, params: {}
@@ -35,7 +34,7 @@ RSpec.describe Api::ImportationController, type: :controller do
       end
 
       it "calls Importation::RestaurantData and returns ok" do
-        fake_result = { success: ["Test Restaurant"], failed: [] }
+        fake_result = { success: [ "Test Restaurant" ], failed: [] }
 
         expect_any_instance_of(Importation::RestaurantData).to receive(:perform).and_return(fake_result)
 
@@ -48,11 +47,11 @@ RSpec.describe Api::ImportationController, type: :controller do
 
     context "when import fails" do
       let(:invalid_params) do
-        { restaurants: [{ name: "" }] }
+        { restaurants: [ { name: "" } ] }
       end
 
       it "returns unprocessable_entity" do
-        fake_result = { success: [], failed: ["Invalid data"] }
+        fake_result = { success: [], failed: [ "Invalid data" ] }
 
         expect_any_instance_of(Importation::RestaurantData).to receive(:perform).and_return(fake_result)
 
@@ -69,12 +68,11 @@ RSpec.describe Api::ImportationController, type: :controller do
           .to receive(:perform)
           .and_raise(StandardError, "Unexpected error")
 
-        post :import, params: { restaurants: [{ name: "Something" }] }
+        post :import, params: { restaurants: [ { name: "Something" } ] }
 
         expect(response).to have_http_status(:internal_server_error)
         expect(response.body).to eq("Unexpected error")
       end
     end
-
   end
 end
