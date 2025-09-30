@@ -1,0 +1,56 @@
+# =========================
+# Rails / Ruby
+# =========================
+
+# Ignore bundler config
+/.bundle
+
+# Ignore all logfiles and tempfiles
+/log/*
+/tmp/*
+/tmp/cache/
+/tmp/pids/
+/tmp/sockets/
+
+# Ignore storage (uploads in development and SQLite DBs)
+ /storage/*
+
+# Ignore master key for credentials
+/config/master.key
+
+# Ignore Byebug command history
+.byebug_history
+
+# Ignore coverage reports
+/coverage/
+
+# Ignore RubyMine / IDE files
+.idea/
+*.iml
+
+# =========================
+# Node / Vue.js
+# =========================
+
+# Node dependencies
+/node_modules/
+
+# Yarn / pnpm cache (opcional)
+/.yarn/*
+/.pnpm-store/
+
+# Build outputs
+/public/packs/
+/public/assets/
+/dist/
+
+# =========================
+# Environment files
+# =========================
+
+# Ignore environment variables (never commit secrets)
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
