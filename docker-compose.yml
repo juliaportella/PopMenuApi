@@ -1,23 +1,29 @@
+version: '3.9'
+
 services:
   db:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: workspace_development
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pop_menu_api_dev
+    volumes:
+      - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
   web:
     build: .
+    command: bash -c "bundle check || bundle install && rails server -b 0.0.0.0"
     volumes:
-      - .:/pop-menu-project
+      - .:/app
     ports:
       - "3000:3000"
     depends_on:
       - db
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/pop_menu_api_dev
+      RAILS_ENV: development
 
 volumes:
-  pgdata:
+  db_data:
