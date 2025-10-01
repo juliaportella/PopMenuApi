@@ -15,22 +15,25 @@ module Importation
     private
 
     def format_success
-      @imported_data[:imported].map do |restaurant|
-        {
-          name: restaurant.name,
-          menus: restaurant.menus.map do |menu|
+      {
+        restaurants:
+          @imported_data[:imported].map do |restaurant|
             {
-              name: menu.name,
-              menu_items: menu.menu_items.map do |item|
+              name: restaurant.name,
+              menus: restaurant.menus.map do |menu|
                 {
-                  name: item.name,
-                  price: item.menus_menu_items.find_by(menu_id: menu.id).price
+                  name: menu.name,
+                  menu_items: menu.menu_items.map do |item|
+                    {
+                      name: item.name,
+                      price: item.menus_menu_items.find_by(menu_id: menu.id).price
+                    }
+                  end
                 }
               end
             }
           end
-        }
-      end
+      }
     end
 
     def format_failed
@@ -59,7 +62,9 @@ module Importation
         }
       end
 
-      failed_imports + failed_invalids
+      {
+        restaurants: failed_imports + failed_invalids
+      }
     end
   end
 end
