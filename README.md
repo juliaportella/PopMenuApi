@@ -1,74 +1,78 @@
+
 # PopMenuApi
 
-Uma aplicação para gerenciar restaurantes, menus e itens de menu, com suporte a importação de dados via API.
+An application to manage restaurants, menus, and menu items, with support for data import via API.
 
 ---
 
-### 🔹 Descrição do Projeto
-Esta aplicação permite:
-- Criar e listar restaurantes, menus e itens de menu.
-- Validar dados de restaurantes, menus e itens antes da importação.
-- Importar dados via API, retornando relatórios de sucesso e falha.
+### 🔹 Project Description
+This application allows you to:
+- Create and list restaurants, menus, and menu items.
+- Validate restaurant, menu, and item data before import.
+- Import data via API, returning success and failure reports.
 
 
-### 🔹 Tecnologias Utilizadas
+### 🔹 Technologies Used
 
 - Ruby 3.x
 - Ruby on Rails 7.x
 - PostgreSQL
-- RSpec / FactoryBot para testes
+- RSpec / FactoryBot for testing
 
 ---
 
-### 🔹 Setup do Projeto
+### 🔹 Project Setup
 
-Clone o repositório:
+Clone the repository:
 
 ```bash
 git clone git@github.com:juliaportella/PopMenuApi.git
 cd PopMenuApi
-```
+````
 
-Acesse o container docker: 
+Bring up the application:
+
 ```bash
-docker compose run --rm web bash
-ou
-docker-compose run --rm web bash
-```
-Rode os seguintes comandos: 
-```bash
-rails db:create
-rails db:migrate
+docker compose up
 ```
 
----
+-----
 
-### 📌 Rotas disponíveis
-#### Restaurantes
-- GET `/api/restaurants` → Lista todos os restaurantes
-- GET `/api/restaurants/:id` → Mostra um restaurante específico
-- POST `/api/restaurants` → Cria um novo restaurante
-- PUT `/api/restaurants/:id` → Atualiza um restaurante
-- DELETE `/api/restaurants/:id` → Remove um restaurante
+### 📌 Available Routes
+
+#### Restaurants
+
+  - GET `/restaurants` → Lists all restaurants
+  - GET `/restaurants/:id` → Shows a specific restaurant
 
 #### Menus
-- GET `/api/restaurants/:restaurant_id/menus` → Lista menus de um restaurante
-- POST `/api/restaurants/:restaurant_id/menus` → Cria um menu para o restaurante
 
-#### Itens de Menu
-- GET `/api/restaurants/:restaurant_id/menus/:menu_id/menu_items` → Lista itens de um menu
-- POST `/api/restaurants/:restaurant_id/menus/:menu_id/menu_items` → Cria um item de menu
+  - GET `/menus` → Lists all menus
+  - GET `/menus/:id` → Shows a specific menu
 
----
+#### Menu Items
 
-### 📥 Rota de Importação
+  - GET `/menu_items` → Lists all menu items
+  - GET `/menu_items/:id` → Shows a specific menu item
 
-Permite importar restaurantes, menus e itens em massa via JSON.
+
+#### Menu and Menu Items Relations
+
+- GET `/menus_menu_items` → Lists all relations between menu and menu_items
+- GET `/menus_menu_items/:id` → Shows a specific relation
+
+-----
+
+### 📥 Import Route
+
+Allows importing restaurants, menus, and items in bulk via JSON.
 
 #### Endpoint
+
 POST `/api/importation`
 
-#### Exemplo de payload
+#### Payload Example
+
 ```bash
 {
   "restaurants": [
@@ -95,7 +99,8 @@ POST `/api/importation`
 }
 ```
 
-#### Resposta esperada
+#### Expected Success Response
+
 ```bash
 {
   "success": {
@@ -124,41 +129,54 @@ POST `/api/importation`
 }
 ```
 
-#### Em caso de erro
+#### In Case of Error Response
+
 ```bash
 {
   "success": {
     "restaurants": []
   },
-  "failed": [
-    {
-      "name": null,
-      "error": "Invalid parameters",
-      "errors": [
-        "Restaurant name is missing"
-      ],
-      "menus": [
-        {
-          "name": "lunch",
-          "errors": null,
-          "items": [
-            {
-              "name": "Burger",
-              "price": 9.0,
-              "errors": null
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "failed": {
+    "restaurants": [
+      {
+        "name": null,
+        "error": "Invalid parameters",
+        "errors": [
+          "Restaurant name is missing"
+        ],
+        "menus": [
+          {
+            "name": "lunch",
+            "errors": null,
+            "items": [
+              {
+                "name": "Burger",
+                "price": 9.0,
+                "errors": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 
-O fluxo de importação funciona assim:
-1. A rota `/api/importation` recebe um JSON contendo restaurantes e seus menus.
-2. O validador (`Validators::ImportationRequestParams`) verifica se os dados possuem as chaves corretas e se cada registro está correto.
-3. O criador de dados (`Importation::RestaurantsDataCreator`) cria as entidades no banco, tratando erros inesperados.
-4. O builder (`Importation::ResponseBuilder`) formata a resposta final, separando os registros importados dos que falharam, retornando uma responsa json.
+#### The Import Flow Works As Follows:
 
----
+1.  The `/api/importation` route receives a JSON containing restaurants and their menus.
+2.  The validator (`Validators::ImportationRequestParams`) checks if the data has the correct keys and if each record is valid.
+3.  The data creator (`Importation::RestaurantsDataCreator`) creates the entities in the database, handling unexpected errors.
+4.  The builder (`Importation::ResponseBuilder`) formats the final response, separating imported records from failed ones, returning a JSON response.
+
+-----
+
+#### Technical Decisions
+
+To meet the requirements as closely as possible, I made some decisions in this phase that can be easily readjusted in the future due to the project's flexibility.
+I would like to emphasize that, in a production environment, the adopted approach would be different. Considering scalability and maintenance, it would not be appropriate to accept multiple key variations (like `dishes` and `menu_items`) and delegate the responsibility to the backend to handle and normalize all of them. This would increase code complexity, hinder application evolution, and potentially generate data inconsistencies.
+
+The most recommended practice would be to clearly define which parameters the API accepts for registering restaurants, menus, and menu items, ensuring predictability and consistency.
+
+However, considering the context of the technical test, the decision to also accept the `dishes` key aims to make the most of the provided data, ensuring that the largest possible number of items is registered in the application.
